@@ -1,0 +1,10 @@
+﻿@page "/account/logout"
+@inject SignInManager<ApplicationUser> SignInManager
+@inject NavigationManager NavigationManager
+
+<form method="post" action="/api/account/logout">
+    <p>Are you sure you want to log out?</p>
+    <button type="submit" class="btn btn-danger">Logout</button>
+    <a href="/" class="btn btn-secondary">Cancel</a>
+</form>
+

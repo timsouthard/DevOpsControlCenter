@@ -1,0 +1,37 @@
+﻿@page "/account/login"
+@using System.ComponentModel.DataAnnotations
+@inject NavigationManager NavigationManager
+@inject Services.ApiClient Api
+
+<h3>Login</h3>
+
+<form method="post" action="/api/account/login">
+    <div class="mb-3">
+        <label for="email">Email</label>
+        <input id="email" name="Email" type="email" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label for="password">Password</label>
+        <input id="password" name="Password" type="password" class="form-control" required />
+    </div>
+
+    <div class="form-check mb-3">
+        <input id="remember" name="RememberMe" type="checkbox" class="form-check-input" />
+        <label for="remember" class="form-check-label">Remember me</label>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Login</button>
+</form>
+
+<hr />
+
+<div class="alert alert-info mt-3">
+    <h5>Demo Accounts</h5>
+    <p>You can use one of these seeded accounts to log in:</p>
+    <ul>
+        <li><strong>Admin:</strong> <code>admin@demo.com</code> / <code>Admin123!</code></li>
+        <li><strong>User:</strong> <code>user@demo.com</code> / <code>User123!</code></li>
+    </ul>
+    <small>These accounts are automatically created when the app first runs.</small>
+</div>
