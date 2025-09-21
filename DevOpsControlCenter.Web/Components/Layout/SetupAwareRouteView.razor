@@ -1,0 +1,107 @@
+﻿@using Microsoft.AspNetCore.Components
+@using System.Reflection
+@using DevOpsControlCenter.Web.Services
+@using DevOpsControlCenter.Web.Components.Layout
+
+@inject NavigationManager Nav
+@inject IDevOpsConnectionService ConnectionService
+
+@if (RequiresAuth)
+{
+    <AuthorizeView>
+        <Authorized>
+            @if (redirecting)
+            {
+                <LayoutView Layout="@ResolvedLayout">
+                    <p>Redirecting to setup...</p>
+                </LayoutView>
+            }
+            else
+            {
+                @RouteViewBody
+            }
+        </Authorized>
+        <NotAuthorized Context="authState">
+            @NotAuthorized?.Invoke(authState)
+        </NotAuthorized>
+    </AuthorizeView>
+}
+else
+{
+    @RouteViewBody
+}
+
+@code {
+    [Parameter] public RouteData RouteData { get; set; } = default!;
+    [Parameter] public Type? DefaultLayout { get; set; }
+    [Parameter] public RenderFragment<AuthenticationState>? NotAuthorized { get; set; }
+
+    private bool redirecting;
+    private bool RequiresAuth => RouteData.PageType?
+        .GetCustomAttributes(typeof(Microsoft.AspNetCore.Authorization.AuthorizeAttribute), inherit: true)
+        .Any() == true;
+
+    private RenderFragment? RouteViewBody => RouteData.PageType != null
+        ? builder =>
+        {
+            builder.OpenComponent<LayoutView>(0);
+            builder.AddAttribute(1, "Layout", ResolvedLayout);
+
+            builder.AddAttribute(2, "ChildContent", (RenderFragment)(layoutBuilder =>
+            {
+                layoutBuilder.OpenComponent(3, RouteData.PageType);
+                foreach (var kvp in RouteData.RouteValues)
+                {
+                    layoutBuilder.AddAttribute(4, kvp.Key, kvp.Value);
+                }
+                layoutBuilder.CloseComponent();
+            }));
+
+            builder.CloseComponent();
+        }
+    : null;
+
+    private Type ResolvedLayout
+    {
+        get
+        {
+            var explicitLayout = RouteData.PageType?
+                .GetCustomAttributes(typeof(LayoutAttribute), inherit: true)
+                .OfType<LayoutAttribute>()
+                .FirstOrDefault()?.LayoutType;
+
+            if (explicitLayout != null)
+                return explicitLayout;
+
+            if (Nav.Uri.Contains("/setup", StringComparison.OrdinalIgnoreCase))
+                return typeof(SetupLayout);
+
+            return DefaultLayout!;
+        }
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (!RequiresAuth)
+        {
+            redirecting = false;
+            return;
+        }
+
+        if (Nav.Uri.Contains("/setup", StringComparison.OrdinalIgnoreCase))
+        {
+            redirecting = false;
+            return;
+        }
+
+        if (!await ConnectionService.ExistsAsync())
+        {
+            redirecting = true;
+            Nav.NavigateTo("/setup", forceLoad: true);
+        }
+        else
+        {
+            redirecting = false;
+        }
+    }
+}

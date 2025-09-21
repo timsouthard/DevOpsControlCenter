@@ -1,5 +1,6 @@
 ﻿@using System.Net.Http
 @using System.Net.Http.Json
+@using DevOpsControlCenter.Infrastructure.Services
 @using Microsoft.AspNetCore.Components.Forms
 @using Microsoft.AspNetCore.Components.Routing
 @using Microsoft.AspNetCore.Components.Web
@@ -14,3 +15,6 @@
 @using DevOpsControlCenter.Domain.Entities
 
 @using Microsoft.AspNetCore.Identity
+
+@inject IDevOpsConnectionService ConnectionService
+@inject NavigationManager Nav

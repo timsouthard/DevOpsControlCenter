@@ -1,0 +1,51 @@
+﻿@page "/projects"
+@using DevOpsControlCenter.Web.Dtos
+@using DevOpsControlCenter.Web.Services
+@attribute [Authorize]
+@inject IDevOpsService DevOpsService
+
+<PageTitle>Projects</PageTitle>
+
+<h1>DevOps Projects</h1>
+
+@if (projects == null)
+{
+    <p><em>Loading...</em></p>
+}
+else if (projects.Count == 0)
+{
+    <p>No projects found. Check your setup.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>State</th>
+                <th>Revision</th>
+                <th>Updated</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var project in projects)
+            {
+                <tr>
+                    <td>@project.Name</td>
+                    <td>@project.State</td>
+                    <td>@project.Revision</td>
+                    <td>@project.LastUpdateTime</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<ProjectDto>? projects;
+
+    protected override async Task OnInitializedAsync()
+    {
+        projects = await DevOpsService.GetProjectsAsync();
+    }
+}

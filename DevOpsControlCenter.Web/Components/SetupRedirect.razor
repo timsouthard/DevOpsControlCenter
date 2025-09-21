@@ -1,0 +1,14 @@
+﻿@code {
+    protected override async Task OnInitializedAsync()
+    {
+        var currentUri = Nav.Uri.ToLowerInvariant();
+
+        if (!currentUri.Contains("/setup"))
+        {
+            if (!await ConnectionService.ExistsAsync())
+            {
+                Nav.NavigateTo("/setup", forceLoad: true);
+            }
+        }
+    }
+}

@@ -1,0 +1,30 @@
+﻿@inherits LayoutComponentBase
+
+<main>
+    <header class="top-row ps-3 navbar navbar-dark bg-dark d-flex justify-content-between align-items-center">
+        <div>
+            <NavLink class="navbar-brand text-light" href="/">
+                <span class="bi bi-house-fill"></span> Home
+            </NavLink>
+        </div>
+        <div>
+            <AuthorizeView Context="authContext">
+                <Authorized>
+                    <span class="text-light me-3">Hello, @authContext.User.Identity?.Name</span>
+                    <NavLink class="nav-link d-inline text-light" href="account/logout">
+                        <span class="bi bi-box-arrow-right" aria-hidden="true"></span> Logout
+                    </NavLink>
+                </Authorized>
+                <NotAuthorized>
+                    <NavLink class="nav-link d-inline text-light" href="account/login">
+                        <span class="bi bi-box-arrow-in-right" aria-hidden="true"></span> Login
+                    </NavLink>
+                </NotAuthorized>
+            </AuthorizeView>
+        </div>
+    </header>
+
+    <div class="setup-container">
+        @Body
+    </div>
+</main>

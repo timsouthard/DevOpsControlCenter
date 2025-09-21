@@ -1,0 +1,35 @@
+﻿@page "/setup"
+
+<h3>DevOps Setup</h3>
+
+<EditForm Model="@connection" OnValidSubmit="Save">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="mb-3">
+        <label>Connection Name</label>
+        <InputText class="form-control" @bind-Value="connection.Name" autocomplete="off" />
+    </div>
+
+    <div class="mb-3">
+        <label>DevOps URL</label>
+        <InputText class="form-control" @bind-Value="connection.Url" autocomplete="off" />
+    </div>
+
+    <div class="mb-3">
+        <label>Personal Access Token</label>
+        <InputText type="password" class="form-control" @bind-Value="connection.PersonalAccessToken" autocomplete="new-password" />
+    </div>
+
+    <button class="btn btn-primary" type="submit">Save</button>
+</EditForm>
+
+@code {
+    private DevOpsControlCenter.Domain.Entities.DevOpsConnection connection = new();
+
+    private async Task Save()
+    {
+        await ConnectionService.AddAsync(connection);
+        Nav.NavigateTo("/", forceLoad: true);
+    }
+}

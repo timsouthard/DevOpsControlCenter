@@ -1,0 +1,24 @@
+﻿@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@inject NavigationManager Nav
+@inject IDevOpsConnectionService ConnectionService
+@attribute [Authorize]
+
+@code {
+    [CascadingParameter] private Task<AuthenticationState> AuthTask { get; set; } = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthTask;
+        var user = authState.User;
+
+        if (user.Identity?.IsAuthenticated == true)
+        {
+            if (!await ConnectionService.ExistsAsync() &&
+                !Nav.Uri.Contains("/setup", StringComparison.OrdinalIgnoreCase))
+            {
+                Nav.NavigateTo("/setup", forceLoad: true);
+            }
+        }
+    }
+}

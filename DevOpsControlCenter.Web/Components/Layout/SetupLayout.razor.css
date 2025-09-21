@@ -1,0 +1,20 @@
+﻿.setup-container {
+    margin: 2rem auto;
+    max-width: 600px;
+    padding: 2rem;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+header.navbar {
+    padding: 0.5rem 1rem;
+}
+
+header .navbar-brand {
+    font-weight: bold;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    text-decoration: none;
+}

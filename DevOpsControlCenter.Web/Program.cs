@@ -1,6 +1,7 @@
 using DevOpsControlCenter.Domain.Entities;
 using DevOpsControlCenter.Infrastructure.Identity;
 using DevOpsControlCenter.Infrastructure.Persistence;
+using DevOpsControlCenter.Infrastructure.Services;
 using DevOpsControlCenter.Web.Components;
 using DevOpsControlCenter.Web.Dtos;
 using DevOpsControlCenter.Web.Services;
@@ -13,7 +14,7 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Database (pointing at Infrastructure DbContext)
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
+builder.Services.AddDbContextFactory<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Identity
@@ -74,6 +75,8 @@ builder.Services.AddAuthorization();
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<ApiClient>();
+builder.Services.AddScoped<IDevOpsConnectionService, DevOpsConnectionService>();
+builder.Services.AddScoped<IDevOpsService, DevOpsService>();
 
 var app = builder.Build();
 
