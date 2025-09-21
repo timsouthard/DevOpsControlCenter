@@ -9,14 +9,14 @@ namespace DevOpsControlCenter.Tests;
 
 public class DevOpsConnectionServiceTests
 {
-    private async Task<DevOpsConnectionService> CreateServiceAsync()
+    private Task<DevOpsConnectionService> CreateServiceAsync()
     {
         var options = new DbContextOptionsBuilder<ApplicationDbContext>()
             .UseInMemoryDatabase(Guid.NewGuid().ToString()) // isolated per test
             .Options;
 
         var factory = new PooledDbContextFactory<ApplicationDbContext>(options);
-        return new DevOpsConnectionService(factory);
+        return Task.FromResult(new DevOpsConnectionService(factory));
     }
 
     [Fact]
